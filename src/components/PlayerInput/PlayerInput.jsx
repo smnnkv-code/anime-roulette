@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { SHIKIMORI_OAUTH_URL } from '../../config/shikimori';
 import styles from './PlayerInput.module.css';
 
 /**
@@ -176,7 +175,7 @@ export default function PlayerInput({
 
             <div className={styles.fieldGroup} style={{ marginTop: '10px' }}>
               <label htmlFor="token-input" className={styles.label}>
-                API Токен
+                API Токен (опционально)
               </label>
               <div className={styles.inputWrapper}>
                 <input
@@ -185,10 +184,9 @@ export default function PlayerInput({
                   type={showToken ? 'text' : 'password'}
                   value={token}
                   onChange={(e) => setToken(e.target.value)}
-                  placeholder="Из настроек Shikimori"
+                  placeholder="Только для приватных списков"
                   autoComplete="current-password"
                   disabled={isLoading}
-                  required
                   style={{ paddingRight: '36px' }}
                 />
                 <button
@@ -214,7 +212,7 @@ export default function PlayerInput({
           id="load-list-button"
           type="submit"
           className={styles.loadBtn}
-          disabled={isLoading || (isMal ? !malUsername : (!nickname || !token))}
+          disabled={isLoading || (isMal ? !malUsername : !nickname)}
           style={{ marginTop: '12px' }}
         >
           {isLoading ? '▌▌ LOADING...' : '► ЗАГРУЗИТЬ СПИСОК'}
@@ -224,7 +222,7 @@ export default function PlayerInput({
       <p className={styles.hint}>
         {isMal
           ? <>Профиль должен быть публичным на <a href="https://myanimelist.net" target="_blank" rel="noopener noreferrer">myanimelist.net</a></>
-          : <>Токен: <a href={SHIKIMORI_OAUTH_URL} target="_blank" rel="noopener noreferrer">shikimori.io/oauth/applications</a></>
+          : <>Профиль должен быть публичным на <a href="https://shikimori.one" target="_blank" rel="noopener noreferrer">shikimori.one</a></>
         }
       </p>
     </div>

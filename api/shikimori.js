@@ -63,10 +63,6 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid nickname format' });
   }
 
-  if (!token) {
-    return res.status(401).json({ error: 'API token is required' });
-  }
-
   const safeLimit = Math.min(5000, Math.max(1, parseInt(limit, 10) || 5000));
   const safePage  = Math.max(1, parseInt(page, 10) || 1);
 
@@ -75,9 +71,9 @@ export default async function handler(req, res) {
   try {
     const response = await fetch(url, {
       headers: {
-        'User-Agent':    'AnimeRoulette/1.0 (personal project)',
-        'Authorization': `Bearer ${token}`,
-        'Accept':        'application/json',
+        'User-Agent': 'AnimeRoulette/1.0 (personal project)',
+        'Accept':     'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
       },
       signal: AbortSignal.timeout(8000),
     });

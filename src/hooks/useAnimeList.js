@@ -49,8 +49,8 @@ export function useAnimeList() {
 
   // ── Загрузка из Shikimori ────────────────────────────────────────────
   const fetchShikimori = useCallback(async (nickname, token) => {
-    if (!nickname || !token) {
-      setError('Введи никнейм и API-токен Shikimori');
+    if (!nickname) {
+      setError('Введи никнейм Shikimori');
       return false;
     }
 
@@ -71,7 +71,7 @@ export function useAnimeList() {
     try {
       const res = await fetch(
         `/api/shikimori?nickname=${encodeURIComponent(nickname)}&limit=5000`,
-        { headers: { 'X-Shikimori-Token': token } }
+        { headers: token ? { 'X-Shikimori-Token': token } : {} }
       );
 
       if (!res.ok) {
@@ -84,7 +84,11 @@ export function useAnimeList() {
       if (data.length === 0) throw new Error('Список запланированного пуст или профиль приватный');
 
       localStorage.setItem(STORAGE_KEY_NICKNAME, nickname);
-      sessionStorage.setItem(STORAGE_KEY_TOKEN, token);
+      if (token) {
+        sessionStorage.setItem(STORAGE_KEY_TOKEN, token);
+      } else {
+        sessionStorage.removeItem(STORAGE_KEY_TOKEN);
+      }
       localStorage.removeItem(STORAGE_KEY_TOKEN); // удаляем из постоянного хранилища на диске
 
       cacheRef.current = { key: cacheKey, data, timestamp: now };

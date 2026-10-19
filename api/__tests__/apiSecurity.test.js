@@ -59,13 +59,19 @@ describe('Кейс 1: Валидация входных параметров (ap
     expect(res.body.error).toBe('Invalid nickname format');
   });
 
-  it('требует API токен при запросе по никнейму (код 401)', async () => {
+  it('успешно проксирует публичный запрос по никнейму без токена', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve([{ id: 101, status: 'planned' }]),
+    }));
+
     const req = { query: { nickname: 'ValidUser' }, headers: {}, method: 'GET' };
     const res = createMockRes();
     await shikimoriHandler(req, res);
 
-    expect(res.statusCode).toBe(401);
-    expect(res.body.error).toBe('API token is required');
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual([{ id: 101, status: 'planned' }]);
   });
 });
 
