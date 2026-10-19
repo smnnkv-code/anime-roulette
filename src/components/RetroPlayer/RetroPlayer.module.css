@@ -1,0 +1,356 @@
+/* =====================================================
+   RetroPlayer — Аркадный HLS-плеер
+   CRT scanlines, neon cyan/yellow, pixel font UI
+   ===================================================== */
+
+/* ── Root ─────────────────────────────────────────── */
+.root {
+  width: 100%;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  background: #000;
+  position: relative;
+}
+
+/* ── Статус / Лоадер / Ошибка ─────────────────────── */
+.status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 48px 24px;
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: #00ffcc;
+  text-shadow: 0 0 8px #00ffcc;
+  text-align: center;
+}
+
+.statusError {
+  color: #ff2244;
+  text-shadow: 0 0 8px #ff2244;
+}
+
+.subStatus {
+  font-size: 6px;
+  color: rgba(0, 255, 204, 0.5);
+  text-shadow: none;
+  letter-spacing: 1px;
+  max-width: 340px;
+  line-height: 1.6;
+}
+
+.statusError .subStatus {
+  color: rgba(255, 34, 68, 0.6);
+}
+
+.spinner {
+  font-size: 24px;
+  display: block;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.fallbackBtn {
+  margin-top: 8px;
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  letter-spacing: 1.5px;
+  color: #ffee00;
+  background: rgba(255, 238, 0, 0.08);
+  border: 1px solid rgba(255, 238, 0, 0.3);
+  border-radius: 3px;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.fallbackBtn:hover {
+  background: rgba(255, 238, 0, 0.18);
+  border-color: rgba(255, 238, 0, 0.6);
+}
+
+/* ── Selection Panel ──────────────────────────────── */
+.selection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 18px;
+  background: linear-gradient(180deg, #050e1a 0%, #020810 100%);
+}
+
+/* Строка лейбл + контрол */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fieldLabel {
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  letter-spacing: 2px;
+  color: rgba(0, 255, 204, 0.7);
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 72px;
+}
+
+/* ── Select (озвучка / качество) ─────────────────── */
+.select {
+  flex: 1;
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  letter-spacing: 1px;
+  color: #00ffcc;
+  background: rgba(0, 255, 204, 0.05);
+  border: 1px solid rgba(0, 255, 204, 0.25);
+  border-radius: 3px;
+  padding: 6px 10px;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+
+  /* Стрелка вниз — SVG */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2300ffcc'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+}
+
+.select:hover,
+.select:focus {
+  border-color: rgba(0, 255, 204, 0.6);
+  box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+  background-color: rgba(0, 255, 204, 0.08);
+}
+
+.select option {
+  background: #050e1a;
+  color: #00ffcc;
+}
+
+/* ── Episode Section ─────────────────────────────── */
+.episodeSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.epCurrent {
+  color: #00ffcc;
+  text-shadow: 0 0 6px #00ffcc;
+}
+
+.epTotal {
+  color: rgba(0, 255, 204, 0.4);
+}
+
+/* Сетка кнопок эпизодов */
+.episodeGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-height: 140px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* Аркадный скролл */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 255, 204, 0.4) transparent;
+}
+
+.episodeGrid::-webkit-scrollbar {
+  width: 4px;
+}
+
+.episodeGrid::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 204, 0.35);
+  border-radius: 2px;
+}
+
+/* Кнопка эпизода */
+.epBtn {
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  color: rgba(0, 255, 204, 0.7);
+  background: rgba(0, 255, 204, 0.04);
+  border: 1px solid rgba(0, 255, 204, 0.15);
+  border-radius: 2px;
+  width: 34px;
+  height: 26px;
+  cursor: pointer;
+  transition: all 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.epBtn:hover {
+  background: rgba(0, 255, 204, 0.12);
+  border-color: rgba(0, 255, 204, 0.4);
+  color: #00ffcc;
+}
+
+.epActive {
+  background: rgba(0, 255, 204, 0.18) !important;
+  border-color: #00ffcc !important;
+  color: #00ffcc !important;
+  text-shadow: 0 0 6px #00ffcc;
+  box-shadow: 0 0 8px rgba(0, 255, 204, 0.3);
+}
+
+/* ── Actions ─────────────────────────────────────── */
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* PLAY кнопка */
+.playBtn {
+  flex: 1;
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  letter-spacing: 1.5px;
+  color: #00ffcc;
+  background: linear-gradient(135deg, #001a14, #002a1e);
+  border: 2px solid #00ffcc;
+  border-radius: 3px;
+  padding: 10px 16px;
+  cursor: pointer;
+  text-shadow: 0 0 8px #00ffcc;
+  box-shadow: 0 0 14px rgba(0, 255, 204, 0.3);
+  transition: all 0.15s;
+
+  /* Ticket перфорация */
+  mask-image:
+    radial-gradient(circle at 0 50%, transparent 5px, black 5px),
+    radial-gradient(circle at 100% 50%, transparent 5px, black 5px);
+}
+
+.playBtn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #002a1e, #004030);
+  box-shadow: 0 0 25px rgba(0, 255, 204, 0.55);
+  border-color: #66ffee;
+}
+
+.playBtn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.playBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Iframe кнопка */
+.iframeBtn {
+  font-family: var(--font-pixel);
+  font-size: 5px;
+  letter-spacing: 1px;
+  color: rgba(255, 238, 0, 0.65);
+  background: rgba(255, 238, 0, 0.05);
+  border: 1px solid rgba(255, 238, 0, 0.2);
+  border-radius: 3px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.iframeBtn:hover {
+  background: rgba(255, 238, 0, 0.12);
+  border-color: rgba(255, 238, 0, 0.5);
+  color: #ffee00;
+}
+
+/* ── Player area ─────────────────────────────────── */
+.playerWrap {
+  position: relative;
+  width: 100%;
+  /* Соотношение 16:9 */
+  padding-bottom: 56.25%;
+  background: #000;
+  display: none;
+  overflow: hidden;
+}
+
+.playerVisible {
+  display: block;
+}
+
+.video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+}
+
+/* CRT scanlines поверх видео */
+.playerWrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.06) 0px,
+    rgba(0, 0, 0, 0.06) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ── Playing meta-bar ────────────────────────────── */
+.playingMeta {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 3;
+  gap: 8px;
+}
+
+.playingInfo {
+  font-family: var(--font-pixel);
+  font-size: 5px;
+  color: rgba(0, 255, 204, 0.7);
+  letter-spacing: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.changeBtn {
+  font-family: var(--font-pixel);
+  font-size: 5px;
+  letter-spacing: 1px;
+  color: #ffee00;
+  background: rgba(255, 238, 0, 0.07);
+  border: 1px solid rgba(255, 238, 0, 0.25);
+  border-radius: 2px;
+  padding: 4px 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.12s;
+}
+
+.changeBtn:hover {
+  background: rgba(255, 238, 0, 0.15);
+  border-color: rgba(255, 238, 0, 0.5);
+}

@@ -1,0 +1,47 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Secrets
+.env
+.env.local
+.env.*.local
+.vercel
+
+# Test & Mutation Reports
+reports/
+coverage/
+.stryker-tmp/
+*.tsbuildinfo
+
+# Agent workflows & internal dev artifacts
+agent-workflows/
+AGENTS.md
+*-PLAN.md
+*-SUMMARY.md
+*-RESULTS.md
+*-AUDIT.md
+DEBT.md
+REVIEW.md
+PRODUCTION-ISSUES.md

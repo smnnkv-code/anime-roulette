@@ -1,0 +1,296 @@
+/* ============================================================
+   ArcadeCabinet — основной корпус автомата
+   ============================================================ */
+
+/* Общий центрирующий контейнер */
+.scene {
+  perspective: 1200px;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* ── Корпус кабинета ── */
+.cabinet {
+  width: 100%;
+  background: linear-gradient(180deg,
+    #1a1a38 0%,
+    #141428 20%,
+    #0f0f22 60%,
+    #0a0a18 100%
+  );
+  border-radius: var(--radius-xl) var(--radius-xl) var(--radius-lg) var(--radius-lg);
+  border: 3px solid var(--metal-edge);
+  position: relative;
+  overflow: hidden;
+
+  /* 3D-эффект корпуса */
+  box-shadow:
+    -8px 0 0 var(--metal-dark),          /* левая грань */
+    8px 0 0 var(--metal-dark),           /* правая грань */
+    0 8px 0 #050510,                     /* нижняя грань */
+    0 0 0 1px #3a3a5a,                   /* внешний обвод */
+    0 20px 60px rgba(0, 0, 0, 0.8),
+    0 0 100px rgba(255, 0, 170, 0.05);
+}
+
+/* Боковые металлические полосы */
+.cabinet::before,
+.cabinet::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  background: repeating-linear-gradient(
+    180deg,
+    var(--metal-edge) 0px,
+    var(--metal-mid)  2px,
+    var(--metal-dark) 4px,
+    var(--metal-mid)  6px
+  );
+  z-index: 5;
+  pointer-events: none;
+}
+.cabinet::before { left: 0; border-radius: var(--radius-xl) 0 0 var(--radius-lg); }
+.cabinet::after  { right: 0; border-radius: 0 var(--radius-xl) var(--radius-lg) 0; }
+
+/* Декоративные «болты» по углам */
+.bolt {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: radial-gradient(circle at 35% 35%, #5a5a7a, #2a2a4a);
+  border-radius: 50%;
+  border: 1px solid #3a3a5a;
+  z-index: 10;
+}
+.bolt::after {
+  content: '+';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 6px;
+  color: #3a3a5a;
+  line-height: 1;
+}
+
+.boltTL { top: 16px;  left: 16px;  }
+.boltTR { top: 16px;  right: 16px; }
+.boltBL { bottom: 16px; left: 16px;  }
+.boltBR { bottom: 16px; right: 16px; }
+
+/* ── Внутренние секции ── */
+
+/* Основной контейнер контента */
+.body {
+  padding: 12px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Экранная область (барабан + карточка победителя) */
+.screenArea {
+  position: relative;
+  width: 100%;
+}
+
+/* C1 — Слот для ShikiButton под экраном */
+.shikiArea {
+  margin-top: -4px; /* чуть ближе к экрану */
+  animation: shikiDrop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes shikiDrop {
+  from { opacity: 0; transform: scaleY(0.3) translateY(-8px); }
+  to   { opacity: 1; transform: scaleY(1)   translateY(0);    }
+}
+
+/* Декоративная полоска-разделитель между секциями */
+.dividerStrip {
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg,
+    transparent,
+    var(--metal-edge) 15%,
+    var(--metal-light) 50%,
+    var(--metal-edge) 85%,
+    transparent
+  );
+  border-radius: var(--radius-full);
+  margin: 4px 0;
+}
+
+/* ── Нижняя панель управления ── */
+.controlPanel {
+  background: linear-gradient(180deg,
+    #0f1020 0%,
+    #0a0b18 100%
+  );
+  border: 2px solid #1e2040;
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Фоновый паттерн на панели управления */
+.controlPanel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 4px,
+    rgba(255,255,255,0.01) 4px,
+    rgba(255,255,255,0.01) 8px
+  );
+  pointer-events: none;
+}
+
+/* Joystick-декор слева */
+.joystick {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+/* D2 — Clockwork: stick+ball вращается вокруг основания */
+.joystickStick {
+  width: 10px;
+  height: 32px;
+  background: linear-gradient(180deg, #3a3a5a, #1a1a2a);
+  border-radius: 5px 5px 2px 2px;
+  border: 1px solid var(--metal-edge);
+  position: relative;
+  transform-origin: 50% 100%;  /* вращаем вокруг нижнего края (соединение с базой) */
+  transition: transform 0.3s ease;
+}
+
+.joystickSpinning .joystickStick {
+  animation: clockwork 1.4s linear infinite;
+}
+
+@keyframes clockwork {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.joystickBase {
+  width: 38px;
+  height: 12px;
+  background: linear-gradient(180deg, #2a2a4a, #1a1a2a);
+  border-radius: 4px;
+  border: 1px solid var(--metal-edge);
+}
+
+.joystickTop {
+  width: 18px;
+  height: 18px;
+  background: radial-gradient(circle at 40% 35%, #5a5a7a, #2a2a4a);
+  border-radius: 50%;
+  border: 1px solid #4a4a6a;
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 6px rgba(0,0,0,0.5);
+}
+
+/* Подсветка шара во время спина */
+.joystickSpinning .joystickTop {
+  box-shadow: 0 0 10px rgba(255, 0, 170, 0.8), 0 0 20px rgba(255, 0, 170, 0.4);
+  background: radial-gradient(circle at 40% 35%, #cc44aa, #660033);
+}
+
+/* Декоративные мелкие кнопки */
+.smallButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.smallBtn {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: box-shadow 0.2s;
+  /* Свечение в цвете кружка */
+  box-shadow: 0 0 6px var(--btn-color, #fff), 0 0 12px var(--btn-color, #fff);
+  animation: dotGlow 2.5s ease-in-out infinite;
+  animation-delay: var(--glow-delay, 0s);
+}
+
+@keyframes dotGlow {
+  0%, 100% {
+    filter: blur(0px);
+    box-shadow: 0 0 5px var(--btn-color), 0 0 10px var(--btn-color);
+  }
+  50% {
+    filter: blur(0.5px);
+    box-shadow: 0 0 10px var(--btn-color), 0 0 22px var(--btn-color), 0 0 35px var(--btn-color);
+  }
+  80% { filter: blur(0px); }
+  81% { filter: blur(1px); box-shadow: 0 0 3px var(--btn-color); }
+  82% { filter: blur(0px); box-shadow: 0 0 10px var(--btn-color), 0 0 20px var(--btn-color); }
+}
+
+/* Волновая анимация кружков во время спина */
+.joystickSpinning ~ * .smallBtn:nth-child(1),
+.controlPanelSpinning .smallBtn:nth-child(1) { animation: dotWave 0.6s 0s    ease-in-out infinite; }
+.controlPanelSpinning .smallBtn:nth-child(2) { animation: dotWave 0.6s 0.15s ease-in-out infinite; }
+.controlPanelSpinning .smallBtn:nth-child(3) { animation: dotWave 0.6s 0.3s  ease-in-out infinite; }
+.controlPanelSpinning .smallBtn:nth-child(4) { animation: dotWave 0.6s 0.45s ease-in-out infinite; }
+
+@keyframes dotWave {
+  0%, 100% { transform: scale(1);    filter: brightness(1); }
+  50%       { transform: scale(1.45); filter: brightness(2.5) saturate(1.5); }
+}
+
+/* Декор снизу кабинета */
+.cabinetBottom {
+  height: 16px;
+  background: linear-gradient(180deg, #1a1a30, #0a0a18);
+  border-top: 2px solid var(--metal-edge);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.bottomLight {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  animation: blink 1s step-end infinite;
+}
+
+/* Надпись на боковой панели */
+.sideLabel {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  letter-spacing: 3px;
+  color: #2a2a4a;
+  white-space: nowrap;
+  z-index: 6;
+  pointer-events: none;
+}
+.sideLabelLeft  { left: -30px; }
+.sideLabelRight { right: -30px; }

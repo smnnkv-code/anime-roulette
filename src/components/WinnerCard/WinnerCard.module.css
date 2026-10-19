@@ -1,0 +1,443 @@
+/* ==============================================================
+   WinnerCard — B1 CRT Edition
+   Правая колонка: justify-content: space-between
+   TOP (Название+Рейтинг) | MIDDLE (TARGET INFO) | BOTTOM (Кот+JP)
+   ============================================================== */
+
+/* ── Оверлей — позиционирование над SlotReel ── */
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: stretch;
+  padding: 8px;
+  box-sizing: border-box;
+  animation: overlayIn 0.3s ease both;
+}
+
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Карточка ── */
+.card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #0a1020 0%, #060810 100%);
+  border: 3px solid var(--neon-yellow);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  animation: cardEntry 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  box-shadow:
+    0 0 20px rgba(255, 238, 0, 0.6),
+    0 0 50px rgba(255, 238, 0, 0.2);
+  /* Arcade ticket — перфорация по бокам */
+  mask-image:
+    radial-gradient(circle at 0 50%, transparent 7px, black 7px),
+    radial-gradient(circle at 100% 50%, transparent 7px, black 7px);
+}
+
+@keyframes cardEntry {
+  from {
+    transform: scale(0.3) translateY(60px) rotate(-4deg);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* ── Шапка (WINNER!) ── */
+.cardHeader {
+  flex-shrink: 0;
+  background: var(--neon-yellow);
+  padding: 5px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.headerLabel {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: #000;
+  letter-spacing: 2px;
+}
+
+.headerStars {
+  font-size: 12px;
+  animation: blink 0.5s step-end infinite;
+}
+
+/* ── Тело: горизонтальный сплит ── */
+.body {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  min-height: 0;
+  overflow: hidden;
+  align-items: stretch;
+}
+
+/* ── Левая колонка: Постер ── */
+.posterCol {
+  width: 44%;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: #000;
+  position: relative;
+}
+
+.poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+
+.posterFallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1a1a3a, #0a0a1a);
+  font-size: 48px;
+}
+
+/* ── Правая колонка: Информация ──
+   justify-content: space-between распределяет 3 дочерних блока
+   по высоте постера без пустых дыр.
+*/
+.infoCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 8px 10px;
+  min-width: 0;
+  overflow: hidden;
+  border-left: 2px solid rgba(255, 238, 0, 0.2);
+  container-type: inline-size;  /* для cqi-единиц в дочерних элементах */
+}
+
+/* ═══════════════════════════════════════
+   БЛОК 1 — ТОП: Название + Рейтинг
+   ═══════════════════════════════════════ */
+
+.topBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.titleRu {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--neon-yellow);
+  text-shadow: 0 0 8px rgba(255, 238, 0, 0.5);
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0;
+}
+
+.titleEn {
+  font-family: var(--font-body);
+  font-size: 9px;
+  color: var(--text-dim);
+  line-height: 1.3;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.stars {
+  color: var(--neon-yellow);
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.ratingNum {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--neon-yellow);
+  text-shadow: 0 0 8px rgba(255, 238, 0, 0.7);
+  line-height: 1;
+}
+
+.ratingLabel {
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  color: var(--text-dim);
+  line-height: 1;
+}
+
+/* ═══════════════════════════════════════
+   БЛОК 2 — СЕРЕДИНА: TARGET INFO (прицел)
+   ═══════════════════════════════════════ */
+
+.targetBox {
+  position: relative;
+  border: 1px solid rgba(0, 170, 255, 0.3);
+  background: rgba(0, 170, 255, 0.03);
+  padding: 4px 6px;
+  animation: targetPulse 3s ease-in-out infinite;
+}
+
+@keyframes targetPulse {
+  0%, 100% {
+    border-color: rgba(0, 170, 255, 0.25);
+    box-shadow: inset 0 0 8px rgba(0, 170, 255, 0.04);
+  }
+  50% {
+    border-color: rgba(0, 170, 255, 0.6);
+    box-shadow: inset 0 0 14px rgba(0, 170, 255, 0.1);
+  }
+}
+
+/* Угловые скобки прицела */
+.cTL, .cTR, .cBL, .cBR {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: var(--neon-blue);
+  border-style: solid;
+}
+.cTL { top: -1px;    left: -1px;   border-width: 2px 0 0 2px; }
+.cTR { top: -1px;    right: -1px;  border-width: 2px 2px 0 0; }
+.cBL { bottom: -1px; left: -1px;   border-width: 0 0 2px 2px; }
+.cBR { bottom: -1px; right: -1px;  border-width: 0 2px 2px 0; }
+
+/* Заголовок и подвал прицела */
+.targetHeader,
+.targetFooter {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 0;
+}
+
+.targetTitle {
+  font-family: var(--font-pixel);
+  font-size: 4.5px;
+  color: var(--neon-blue);
+  text-shadow: 0 0 6px var(--neon-blue);
+  white-space: nowrap;
+  letter-spacing: 1.5px;
+}
+
+.targetFootText {
+  font-family: var(--font-pixel);
+  font-size: 4.5px;
+  color: rgba(0, 170, 255, 0.55);
+  white-space: nowrap;
+  letter-spacing: 1px;
+}
+
+.targetLine {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+  opacity: 0.4;
+}
+
+/* Метаданные 2×2 */
+.metaGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  margin: 3px 0;
+}
+
+.metaCell {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(0, 170, 255, 0.05);
+  border: 1px solid rgba(0, 170, 255, 0.12);
+  border-radius: 2px;
+  padding: 5px 6px;
+}
+
+.metaIcon {
+  font-size: 10px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.metaVal {
+  font-family: var(--font-pixel);
+  font-size: 6.5px;
+  color: var(--neon-blue);
+  text-shadow: 0 0 4px var(--neon-blue);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.3px;
+}
+
+/* ═══════════════════════════════════════
+   БЛОК 3 — НИЗ: Кот + японские фразы
+   (выровнен по нижнему краю постера)
+   ═══════════════════════════════════════ */
+
+/* Кнопка "Смотреть онлайн" */
+.watchActionWrap {
+  margin-top: 6px;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: center;
+}
+
+.watchBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 14px;
+  background: linear-gradient(135deg, rgba(0, 255, 204, 0.2) 0%, rgba(0, 200, 255, 0.1) 100%);
+  color: #00ffcc;
+  border: 1.5px solid #00ffcc;
+  border-radius: 4px;
+  font-family: var(--font-pixel, monospace);
+  font-size: clamp(9px, 1.4cqi, 12px);
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-shadow: 0 0 6px rgba(0, 255, 204, 0.8);
+  box-shadow:
+    0 0 10px rgba(0, 255, 204, 0.25),
+    inset 0 0 10px rgba(0, 255, 204, 0.1);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.watchBtn:hover {
+  background: #00ffcc;
+  color: #050811;
+  text-shadow: none;
+  box-shadow:
+    0 0 20px rgba(0, 255, 204, 0.7),
+    0 0 35px rgba(0, 255, 204, 0.4);
+  transform: translateY(-1px) scale(1.02);
+}
+
+.watchBtn:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.watchIcon {
+  font-size: 1.1em;
+  line-height: 1;
+}
+
+.watchText {
+  white-space: nowrap;
+}
+
+/* Нижний блок: кот + фраза, оба выровнены по центру вертикали */
+.bottomBlock {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding-bottom: 6px;   /* отступ от нижней жёлтой рамки */
+}
+
+/* Обёртка японского текста */
+.jpWrap {
+  flex: 1;
+  display: flex;
+  align-items: center;      /* центр по вертикали */
+  justify-content: center;  /* центр по горизонтали */
+  min-width: 0;
+  overflow: visible;        /* не обрезать текст и свечение */
+  container-type: inline-size;
+}
+
+/* Каждая группа фраз — absolute, занимает всю обёртку */
+.jpGroup {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0px;
+  opacity: 0;   /* по умолчанию скрыто */
+}
+
+/*
+   3 группы, цикл 6s, каждая видна 2s.
+   Положительные задержки + animation-fill-mode:none (умолч.)
+   гарантируют чистую очередь без перекрытий.
+   Group 1: delay 0s  → видна t=0-2s,   t=6-8s, ...
+   Group 2: delay 2s  → видна t=2-4s,   t=8-10s, ...
+   Group 3: delay 4s  → видна t=4-6s,   t=10-12s, ...
+*/
+.jpGroup1 { animation: groupShow 6s linear infinite 0s; }
+.jpGroup2 { animation: groupShow 6s linear infinite 2s; }
+.jpGroup3 { animation: groupShow 6s linear infinite 4s; }
+
+@keyframes groupShow {
+  0%    { opacity: 1; }
+  32.9% { opacity: 1; }
+  33%   { opacity: 0; }
+  100%  { opacity: 0; }
+}
+
+/* Фраза — большой пиксельный шрифт с цветом и свечением
+   font-size подобран под 8 символов «《おめでとう！》» чтобы слово
+   заполняло всю ширину jpWrap без дополнительных отступов */
+.jpPhrase {
+  font-family: var(--font-pixel);
+  font-size: clamp(18px, 13cqi, 60px);
+  line-height: 1;
+  white-space: nowrap;
+  display: block;
+  text-align: center;
+  width: 100%;
+  text-shadow:
+    0 0 8px var(--glow, currentColor),
+    0 0 16px var(--glow, currentColor),
+    0 0 28px var(--glow, currentColor);
+  filter: blur(0.3px);
+  animation: phraseGlow 2s ease-in-out infinite;
+}
+
+@keyframes phraseGlow {
+  0%, 100% {
+    text-shadow:
+      0 0 5px var(--glow),
+      0 0 10px var(--glow);
+    filter: blur(0.3px);
+    opacity: 1;
+  }
+  50% {
+    text-shadow:
+      0 0 10px var(--glow),
+      0 0 20px var(--glow),
+      0 0 35px var(--glow);
+    filter: blur(0px);
+    opacity: 1;
+  }
+  /* Случайное мерцание в конце цикла */
+  80%   { opacity: 1; }
+  80.5% { opacity: 0.15; }
+  81%   { opacity: 1; }
+}

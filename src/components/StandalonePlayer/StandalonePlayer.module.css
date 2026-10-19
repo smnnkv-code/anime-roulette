@@ -1,0 +1,273 @@
+/* =====================================================
+   StandalonePlayer — полноэкранный аркадный плеер Kodik
+   ===================================================== */
+
+.container {
+  min-height: 100vh;
+  width: 100vw;
+  background: radial-gradient(circle at 50% 20%, #0d1527 0%, #050811 100%);
+  color: #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  font-family: 'Press Start 2P', monospace, sans-serif;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* ── Сетка фонового свечения ──────────────────────── */
+.container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 255, 204, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 204, 0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Шапка ────────────────────────────────────────── */
+.header {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  background: rgba(8, 16, 32, 0.95);
+  border-bottom: 2px solid var(--neon-cyan, #00ffcc);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 15px rgba(0, 255, 204, 0.2);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 250px;
+}
+
+.brandTag {
+  background: #00ffcc;
+  color: #050811;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 3px;
+  letter-spacing: 0.08em;
+  box-shadow: 0 0 10px rgba(0, 255, 204, 0.4);
+}
+
+.title {
+  font-size: 14px;
+  color: #ffffff;
+  margin: 0;
+  text-shadow: 0 0 8px rgba(0, 255, 204, 0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 50vw;
+}
+
+.headerCenter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.selectLabel {
+  font-size: 10px;
+  color: #8da2c0;
+}
+
+.select {
+  background: #0b1528;
+  color: #00ffcc;
+  border: 1px solid #00ffcc;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(0, 255, 204, 0.15);
+  transition: all 0.2s ease;
+}
+
+.select:hover, .select:focus {
+  border-color: #ff00aa;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(255, 0, 170, 0.4);
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navBtn {
+  background: transparent;
+  color: #8da2c0;
+  border: 1px solid #334155;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 10px;
+  font-family: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.navBtn:hover {
+  color: #00ffcc;
+  border-color: #00ffcc;
+  box-shadow: 0 0 8px rgba(0, 255, 204, 0.3);
+}
+
+.closeBtn {
+  background: rgba(255, 0, 102, 0.15);
+  color: #ff3377;
+  border: 1px solid #ff0066;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 10px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.closeBtn:hover {
+  background: #ff0066;
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(255, 0, 102, 0.6);
+}
+
+/* ── Область контента ──────────────────────────────── */
+.main {
+  position: relative;
+  z-index: 5;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.videoCard {
+  width: 100%;
+  max-width: 1200px;
+  height: calc(100vh - 120px);
+  background: #000000;
+  border: 2px solid #1a2942;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.8),
+    0 0 25px rgba(0, 255, 204, 0.15);
+}
+
+.iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+/* ── Состояния загрузки и ошибок ─────────────────── */
+.statusBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+  background: rgba(8, 16, 32, 0.85);
+  border: 1px solid #00ffcc;
+  border-radius: 8px;
+  box-shadow: 0 0 30px rgba(0, 255, 204, 0.2);
+  max-width: 500px;
+}
+
+.spinner {
+  font-size: 32px;
+  animation: spin 1.2s linear infinite;
+  margin-bottom: 16px;
+  color: #00ffcc;
+  text-shadow: 0 0 10px #00ffcc;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.statusText {
+  font-size: 12px;
+  color: #ffffff;
+  line-height: 1.6;
+}
+
+.statusError {
+  border-color: #ff0066;
+  box-shadow: 0 0 30px rgba(255, 0, 102, 0.25);
+}
+
+.errorTitle {
+  color: #ff3377;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.errorHint {
+  font-size: 10px;
+  color: #94a3b8;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.errorLink {
+  color: #00ffcc;
+  text-decoration: underline;
+}
+
+.returnBtn {
+  background: #00ffcc;
+  color: #050811;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 11px;
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 0 15px rgba(0, 255, 204, 0.4);
+}
+
+.returnBtn:hover {
+  background: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .title {
+    max-width: 80vw;
+  }
+  .videoCard {
+    height: 60vh;
+  }
+}

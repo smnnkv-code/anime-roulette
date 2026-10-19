@@ -1,0 +1,63 @@
+/* ====================================================
+   PixelCat — анимация пиксельного кота (3-кадровый SVG)
+   ==================================================== */
+
+.wrap {
+  display: flex;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.catSvg {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  /* Нeon-розовое свечение кота */
+  filter:
+    drop-shadow(0 0 4px #ff66cc)
+    drop-shadow(0 0 10px rgba(255, 102, 204, 0.5));
+  /* Лёгкое покачивание вверх-вниз */
+  animation: catBob 1.8s ease-in-out infinite;
+}
+
+@keyframes catBob {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-4px); }
+}
+
+/* ── Анимация глаз: 3 кадра ──
+   Цикл 3.2s:
+     Кадр 1 (открыты):   0% – 60%  = 1.92s
+     Кадр 2 (моргает):  60% – 67%  = 0.22s  ← быстрое моргание
+     Кадр 3 (счастливые): 67% – 100% = 1.06s
+*/
+
+/* Все группы глаз: по умолчанию скрыты */
+.eyesBlink,
+.eyesHappy { opacity: 0; }
+
+.eyesOpen  { animation: eyeOpen  3.2s linear infinite; }
+.eyesBlink { animation: eyeBlink 3.2s linear infinite; }
+.eyesHappy { animation: eyeHappy 3.2s linear infinite; }
+
+@keyframes eyeOpen {
+  0%    { opacity: 1; }
+  59.9% { opacity: 1; }
+  60%   { opacity: 0; }
+  100%  { opacity: 0; }
+}
+
+@keyframes eyeBlink {
+  0%    { opacity: 0; }
+  59.9% { opacity: 0; }
+  60%   { opacity: 1; }
+  66.9% { opacity: 1; }
+  67%   { opacity: 0; }
+  100%  { opacity: 0; }
+}
+
+@keyframes eyeHappy {
+  0%    { opacity: 0; }
+  66.9% { opacity: 0; }
+  67%   { opacity: 1; }
+  100%  { opacity: 1; }
+}

@@ -1,0 +1,153 @@
+/* ============================================================
+   Marquee — верхнее табло аркадного кабинета
+   ============================================================ */
+
+.marquee {
+  width: 100%;
+  padding: 12px 20px;
+  background: linear-gradient(180deg, #000010 0%, #0a0018 50%, #000010 100%);
+  border: 3px solid var(--neon-pink);
+  border-bottom: none;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+
+  box-shadow:
+    0 0 20px var(--neon-pink),
+    0 0 40px rgba(255, 0, 170, 0.3),
+    inset 0 0 30px rgba(255, 0, 170, 0.05);
+}
+
+/* Декоративные звёздочки между заголовками */
+.starsRow {
+  font-size: 11px;
+  color: var(--neon-yellow);
+  letter-spacing: 6px;
+  text-align: center;
+  animation: blink 0.8s step-end infinite;
+  text-shadow: 0 0 6px var(--neon-yellow);
+}
+
+/* Японский заголовок — неоновое дыхание + случайное мигание */
+.titleJp {
+  font-family: var(--font-pixel);
+  font-size: clamp(10px, 2.2vw, 16px);
+  color: var(--neon-pink);
+  text-align: center;
+  letter-spacing: 3px;
+  animation: neonBreathJp 3s ease-in-out infinite;
+  text-shadow:
+    0 0 10px var(--neon-pink),
+    0 0 25px var(--neon-pink),
+    0 0 50px rgba(255, 0, 170, 0.6),
+    0 0 80px rgba(255, 0, 170, 0.3);
+}
+
+@keyframes neonBreathJp {
+  0%, 100% {
+    text-shadow:
+      0 0 8px var(--neon-pink),
+      0 0 20px var(--neon-pink),
+      0 0 40px rgba(255, 0, 170, 0.5);
+    opacity: 1;
+  }
+  40% {
+    text-shadow:
+      0 0 14px var(--neon-pink),
+      0 0 35px var(--neon-pink),
+      0 0 70px rgba(255, 0, 170, 0.8),
+      0 0 100px rgba(255, 0, 170, 0.4);
+    opacity: 1;
+  }
+  /* мигание как у настоящей неоновой трубки */
+  85%  { opacity: 1; }
+  86%  { opacity: 0.3; }
+  87%  { opacity: 1; }
+  94%  { opacity: 1; }
+  95%  { opacity: 0.5; }
+  96%  { opacity: 1; }
+}
+
+/* Английский заголовок — нарастание и спад жёлтого свечения */
+.titleEn {
+  font-family: var(--font-display);
+  font-size: clamp(8px, 1.5vw, 11px);
+  font-weight: 700;
+  color: var(--neon-yellow);
+  text-align: center;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  animation: neonBreathEn 4s ease-in-out infinite 1.5s;
+  text-shadow:
+    0 0 6px var(--neon-yellow),
+    0 0 14px var(--neon-yellow),
+    0 0 30px rgba(255, 238, 0, 0.5);
+}
+
+@keyframes neonBreathEn {
+  0%, 100% {
+    text-shadow:
+      0 0 5px var(--neon-yellow),
+      0 0 12px var(--neon-yellow);
+    letter-spacing: 6px;
+  }
+  50% {
+    text-shadow:
+      0 0 10px var(--neon-yellow),
+      0 0 25px var(--neon-yellow),
+      0 0 50px rgba(255, 238, 0, 0.7);
+    letter-spacing: 7px;   /* лёгкий pulse по inter-letter spacing */
+  }
+  /* мигание в другой фазе чем JP */
+  70%  { opacity: 1; }
+  71%  { opacity: 0.4; }
+  72%  { opacity: 1; }
+}
+
+/* Бегущая строка с никнеймом */
+.ticker {
+  width: 100%;
+  overflow: hidden;
+  height: 16px;
+  position: relative;
+}
+
+.tickerInner {
+  display: inline-block;
+  white-space: nowrap;
+  animation: tickerScroll 24s linear infinite;
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  color: var(--neon-green);
+  text-shadow: 0 0 6px var(--neon-green);
+}
+
+@keyframes tickerScroll {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(-100%); }
+}
+
+/* Декоративная горизонтальная полоска */
+.strip {
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--neon-blue) 20%,
+    var(--neon-pink) 50%,
+    var(--neon-yellow) 80%,
+    transparent
+  );
+  border-radius: var(--radius-full);
+  animation: stripShimmer 2s ease-in-out infinite alternate;
+}
+
+@keyframes stripShimmer {
+  from { opacity: 0.6; }
+  to   { opacity: 1; }
+}

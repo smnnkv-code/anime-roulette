@@ -1,0 +1,6 @@
+{
+  "*.{js,jsx}": [
+    "oxlint --deny-warnings",
+    "vitest related --run"
+  ]
+}

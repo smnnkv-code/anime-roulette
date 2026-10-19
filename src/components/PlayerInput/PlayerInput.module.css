@@ -1,0 +1,343 @@
+/* ============================================================
+   PlayerInput — форма выбора источника и ввода данных
+   Темы: --shiki (фиолетовая) / --mal (синяя)
+   ============================================================ */
+
+/* ── CSS-переменные тем ─────────────────────────────────────── */
+.themeShiki {
+  --accent:      #cc00ff;
+  --accentDim:   rgba(204, 0, 255, 0.15);
+  --accentGlow:  rgba(204, 0, 255, 0.4);
+  --accentBorder: rgba(204, 0, 255, 0.35);
+}
+
+.themeMal {
+  --accent:      #00aaff;
+  --accentDim:   rgba(0, 170, 255, 0.12);
+  --accentGlow:  rgba(0, 170, 255, 0.4);
+  --accentBorder: rgba(0, 170, 255, 0.35);
+}
+
+/* ── Панель ──────────────────────────────────────────────────── */
+.panel {
+  width: 100%;
+  background: linear-gradient(180deg, #0a0d16 0%, #060810 100%);
+  border: 2px solid #1e2840;
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* CRT-строки */
+.panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 170, 255, 0.03) 3px,
+    rgba(0, 170, 255, 0.03) 4px
+  );
+  pointer-events: none;
+}
+
+.panelTitle {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--neon-blue);
+  text-align: center;
+  letter-spacing: 2px;
+  text-shadow: 0 0 8px var(--neon-blue);
+  padding-bottom: 8px;
+  border-bottom: 1px solid #1e2840;
+}
+
+/* ── Выбор источника ─────────────────────────────────────────── */
+.pickerLabel {
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  color: var(--text-dim);
+  text-align: center;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.pickerRow {
+  display: flex;
+  gap: 10px;
+}
+
+.sourceBtn {
+  flex: 1;
+  padding: 14px 8px;
+  border-radius: var(--radius-sm);
+  border: 2px solid transparent;
+  background: #02030a;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  transition: transform 0.15s, box-shadow 0.2s, border-color 0.2s;
+  animation: srcPulse 2.5s ease-in-out infinite;
+}
+
+.sourceBtnShiki {
+  border-color: rgba(204, 0, 255, 0.4);
+  box-shadow: 0 0 10px rgba(204, 0, 255, 0.15), inset 0 0 6px rgba(204, 0, 255, 0.05);
+  --pulse-color: rgba(204, 0, 255, 0.35);
+}
+
+.sourceBtnMal {
+  border-color: rgba(0, 170, 255, 0.4);
+  box-shadow: 0 0 10px rgba(0, 170, 255, 0.15), inset 0 0 6px rgba(0, 170, 255, 0.05);
+  --pulse-color: rgba(0, 170, 255, 0.35);
+  animation-delay: 0.5s;
+}
+
+@keyframes srcPulse {
+  0%, 100% { box-shadow: 0 0 10px var(--pulse-color), inset 0 0 6px rgba(255,255,255,0.02); }
+  50%       { box-shadow: 0 0 22px var(--pulse-color), inset 0 0 10px rgba(255,255,255,0.04); }
+}
+
+.sourceBtn:hover {
+  transform: translateY(-2px) scale(1.03);
+}
+
+.sourceBtnShiki:hover {
+  box-shadow: 0 0 30px rgba(204, 0, 255, 0.55), inset 0 0 10px rgba(204, 0, 255, 0.1);
+  border-color: rgba(204, 0, 255, 0.8);
+}
+
+.sourceBtnMal:hover {
+  box-shadow: 0 0 30px rgba(0, 170, 255, 0.55), inset 0 0 10px rgba(0, 170, 255, 0.1);
+  border-color: rgba(0, 170, 255, 0.8);
+}
+
+.sourceBtn:active {
+  transform: scale(0.97) translateY(0);
+}
+
+.sourceBtnIcon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.sourceBtnName {
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+}
+
+.sourceBtnShiki .sourceBtnName { color: #cc00ff; text-shadow: 0 0 6px #cc00ff; }
+.sourceBtnMal   .sourceBtnName { color: #00aaff; text-shadow: 0 0 6px #00aaff; }
+
+/* ── Индикатор выбранного сервиса + смена ───────────────────── */
+.sourceIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 8px;
+  background: var(--accentDim);
+  border: 1px solid var(--accentBorder);
+  border-radius: var(--radius-sm);
+}
+
+.sourceTag {
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  color: var(--accent);
+  text-shadow: 0 0 6px var(--accent);
+  letter-spacing: 1px;
+}
+
+.switchBtn {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  cursor: pointer;
+  padding: 2px 4px;
+  transition: color 0.2s;
+}
+
+.switchBtn:hover { color: var(--accent); }
+.switchBtn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Поля ввода ─────────────────────────────────────────────── */
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.label {
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  background: #02030a;
+  border: 1px solid #1e2840;
+  border-radius: var(--radius-sm);
+  color: var(--accent, var(--neon-blue));
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  letter-spacing: 1px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  caret-color: var(--accent, var(--neon-blue));
+  box-sizing: border-box;
+}
+
+.input::placeholder {
+  color: #2a3448;
+  font-family: var(--font-pixel);
+  font-size: 7px;
+}
+
+.input:focus {
+  border-color: var(--accent, var(--neon-blue));
+  box-shadow: 0 0 8px var(--accentGlow), inset 0 0 4px var(--accentDim);
+}
+
+.input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.toggleBtn {
+  position: absolute;
+  right: 8px;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px;
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+.toggleBtn:hover { color: var(--accent); }
+
+/* ── Кнопка загрузки ────────────────────────────────────────── */
+.loadBtn {
+  width: 100%;
+  padding: 12px;
+  background: var(--accentDim, linear-gradient(135deg, #001133, #002266));
+  border: 2px solid var(--accent, var(--neon-blue));
+  border-radius: var(--radius-sm);
+  color: var(--accent, var(--neon-blue));
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px var(--accent, var(--neon-blue));
+  box-shadow: 0 0 10px var(--accentGlow, rgba(0, 170, 255, 0.2));
+}
+
+/* Fallback для панели без темы */
+.panel:not(.themeShiki):not(.themeMal) .loadBtn {
+  background: linear-gradient(135deg, #001133, #002266);
+  border-color: var(--neon-blue);
+  color: var(--neon-blue);
+  text-shadow: 0 0 8px var(--neon-blue);
+}
+
+.loadBtn:hover:not(:disabled) {
+  box-shadow: 0 0 20px var(--accentGlow), 0 0 40px var(--accentDim);
+  transform: translateY(-1px);
+}
+
+.loadBtn:active:not(:disabled) { transform: translateY(1px); }
+.loadBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Успех ─────────────────────────────────────────────────── */
+.successBadge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--accentDim, rgba(0, 255, 136, 0.08));
+  border: 1px solid var(--accentBorder, rgba(0, 255, 136, 0.3));
+  border-radius: var(--radius-sm);
+  gap: 8px;
+}
+
+.successText {
+  font-family: var(--font-pixel);
+  font-size: 7px;
+  color: var(--accent, var(--neon-green));
+  text-shadow: 0 0 6px var(--accent, var(--neon-green));
+  line-height: 1.6;
+}
+
+.changeBtn {
+  background: none;
+  border: 1px solid #334455;
+  border-radius: var(--radius-sm);
+  color: var(--text-dim);
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.changeBtn:hover {
+  border-color: var(--accent, var(--neon-blue));
+  color: var(--accent, var(--neon-blue));
+}
+
+/* ── Ошибка / подсказка ─────────────────────────────────────── */
+.error {
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  color: var(--neon-red);
+  text-shadow: 0 0 6px var(--neon-red);
+  padding: 8px;
+  border: 1px solid rgba(255, 34, 68, 0.3);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 34, 68, 0.05);
+  line-height: 1.8;
+  word-break: break-all;
+}
+
+.hint {
+  font-family: var(--font-body);
+  font-size: 11px;
+  color: var(--text-dim);
+  text-align: center;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.hint a {
+  color: var(--accent, var(--neon-blue));
+  text-decoration: none;
+}
+
+.hint a:hover { text-decoration: underline; }

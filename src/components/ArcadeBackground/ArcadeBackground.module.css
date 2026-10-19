@@ -1,0 +1,126 @@
+/* ============================================================
+   ArcadeBackground — E5: Неоновые колонны + плавающие частицы
+   ============================================================ */
+
+/* Фиксированный фон позади всего */
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ── Неоновые колонны ── */
+.col {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 8px;
+  padding: 30px 12px;
+}
+
+.leftCol  { left: 0;  width: 56px; }
+.rightCol { right: 0; width: 56px; }
+
+/* Неоновая трубка */
+.tube {
+  flex: 1;
+  border-radius: 4px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    var(--color) 8%,
+    var(--color) 92%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 6px var(--color),
+    0 0 14px var(--color),
+    0 0 30px var(--color);
+  animation: tubeFlicker var(--dur, 3s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+@keyframes tubeFlicker {
+  0%  { opacity: 0.75; }
+  15% { opacity: 1; }
+  30% { opacity: 0.5; }
+  50% { opacity: 0.9; }
+  70% { opacity: 1; }
+  71% { opacity: 0.2; }   /* мигание */
+  72% { opacity: 1; }
+  90% { opacity: 0.8; }
+  100%{ opacity: 0.75; }
+}
+
+/* Мини-вывеска на колонне */
+.colSign {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-90deg);
+  white-space: nowrap;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 5px;
+  letter-spacing: 1.5px;
+  opacity: 0.25;
+  color: #fff;
+}
+
+/* ── Плавающие частицы ── */
+.particle {
+  position: absolute;
+  font-family: 'Press Start 2P', monospace;
+  animation:
+    particleFloat var(--dur, 7s) ease-in-out infinite var(--delay, 0s),
+    particleGlow  var(--glow-dur, 3s) ease-in-out infinite var(--glow-delay, 0s);
+  pointer-events: none;
+  user-select: none;
+  font-size: var(--size, 16px);
+  color: var(--color, #ff00aa);
+  opacity: var(--opacity, 0.3);
+  left: var(--left, 50%);
+  top: var(--top, 50%);
+  text-shadow:
+    0 0 6px var(--color),
+    0 0 12px var(--color);
+}
+
+@keyframes particleFloat {
+  0%   { transform: translateY(0)     rotate(0deg)   scale(1); }
+  25%  { transform: translateY(-18px) rotate(90deg)  scale(1.1); }
+  50%  { transform: translateY(-28px) rotate(180deg) scale(0.9); }
+  75%  { transform: translateY(-14px) rotate(270deg) scale(1.05); }
+  100% { transform: translateY(0)     rotate(360deg) scale(1); }
+}
+
+/* Хаотичное свечение — независимо от плавания */
+@keyframes particleGlow {
+  0%, 100% {
+    text-shadow: 0 0 5px var(--color), 0 0 10px var(--color);
+    opacity: var(--opacity);
+  }
+  40% {
+    text-shadow:
+      0 0 12px var(--color),
+      0 0 25px var(--color),
+      0 0 45px var(--color);
+    opacity: calc(var(--opacity) * 1.9);
+  }
+  /* мигание — за счёт разных --glow-delay каждый мигает в своё время */
+  65% { opacity: var(--opacity); }
+  66% { opacity: calc(var(--opacity) * 0.15); text-shadow: none; }
+  67% { opacity: var(--opacity); text-shadow: 0 0 10px var(--color), 0 0 20px var(--color); }
+  85% { opacity: var(--opacity); }
+  86% { opacity: calc(var(--opacity) * 1.6); }
+  87% { opacity: var(--opacity); }
+}
+
+/* Скрывать колонны на узких экранах — автомат занимает всё */
+@media (max-width: 620px) {
+  .col { display: none; }
+}
